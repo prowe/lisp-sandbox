@@ -21,6 +21,7 @@ Whenever I am learning a new language, my personal style is to compare it to oth
 - Function/method invocation
 - Conditionals
 - Loops
+- Class/struct declaration and construction
 
 There are other parts of languages, but if I learn the syntax and behavior of these, then I can probably muddle through enough to be dangerous. I'm going to start with a simple "Hello World" so I know how to use a development environment.
 
@@ -78,4 +79,37 @@ A few notes about this. I'm using `write-line` instead of print. I don't know th
 
 I also had to figure out conditionals and variable reassignment. It seems the `when` function takes a predicate followed by a body (similiar to an "if" statement). I can also re-asign a variable by calling `setq`. the `(- times 1)` code is subtraction. It is not [Infix](https://en.wikipedia.org/wiki/Infix_notation) like most languages but rather a function call.)
 
-The other thing I look for is what makes the language special. Most programming languages have some part that makes them better than others at a particular task or have a different opinion about how to approach a problem.
+I assume Lisp supports some way of contstructing objects that contain several named values and probably functions as well. I found [This example](https://www.tutorialspoint.com/lisp/lisp_clos.htm)
+```Lisp
+(defclass Box ()
+    (
+        (length :accessor length)
+        (breadth :accessor breadth)
+        (height :accessor height)
+    )
+)
+```
+One of the first things I noticed was the `:accessor` part. What does the colon syntax do. Colons aren't the best search term, but I found these are [Keyword Parameters](https://www.tutorialspoint.com/lisp/lisp_keyword_parameters.htm)(a.k.a "Named Arguments")
+
+Classes in Lisp are definatly different than other languages. Read through [This example](https://www.tutorialspoint.com/lisp/lisp_clos.htm) for a good explination.
+
+All of the above gives me an idea of how to use the language, but doesn't tell me how the language works. The basic function invocation syntax (`(funcName arg1 arg2)`) seems have multiple uses. In some cases it is simple function invocation, in others the args are not evaluated but are used as names (like when defining function parameters, or using `setq`). I want to know how that works.
+
+Everything in Lisp is made up of [S-expressions](https://en.wikipedia.org/wiki/S-expression). Interesting, `setq` is actually a shortcut for calling [set](https://www.gnu.org/software/emacs/manual/html_node/eintr/Using-set.html#Using-set) with a quoted first argument. While reading the definition of `setq` I came upon the term "Special Form". Looking into that I found [this good explination](https://www.gnu.org/software/emacs/manual/html_node/elisp/Special-Forms.html) of speical forms in Lisp. The way I understand it, there is a set of function names and if the first element of a list is one of those functions then the interpreter does not execute all the arguments but rather passes some of them verbetum. Let's test it out:
+```Lisp
+(defun with0 (sym body)
+    (set sym 0)
+    (eval body)
+)
+(with0 'x '(print x))
+```
+In the above I'm creating a function (`with0`) that takes a sym and body. Then I'm setting a variable with sym as the name to 0, then evaluating the body. This is a similar setup in Javascript:
+```Javascript
+function with0(sym body) {
+    global[sym] = 0;
+    body();
+}
+with0('x', () => console.log(x));
+```
+
+What I've learned is that we can use the single quote to supress execution of a nested s-expression and instead pass it verbetum. Then we can use `eval` later if we want to execute it.
