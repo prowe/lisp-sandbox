@@ -128,5 +128,28 @@ I had a chance to chat with a teammate of mine, Gene Tinderholm. He said one of 
 )
 (print (eight2))
 ```
-I found these examples at https://wiki.c2.com/?LispMacro which has a great explination of macros and how they work.
+I found these examples at https://wiki.c2.com/?LispMacro which has a great explination of macros and how they work. I sill don't quite appreciate the value though.
+
+Gene also recommended I read a book called ["Common Lisp: A gentle Introduction to Symbolic Computation"]() by David S Touretzky. I said I would check it out and he was even kind enough to loan me his copy.
+
+I stared to read the book, skimming the first couple chapters as they were mostly an introduction to programming in general. I did learn some interesting facts about Lisp: The fact that it was originally designed to focus on manipulating lists and the internal structure of those lists.
+
+When I got to the exercises in chapter 4 (conditionals) I decided to start coding some of them. I think it might be useful to use a test driven development (TDD) approach to coding the exercises. So I went on a side-quest to setup unit testing in Lisp.
+
+Googling "Lisp unit testing" I found [lisp-unit](). For simplicity, I choose to downloaded `lisp-unit.lisp` and check it into source control. I then created a `chapter-4.lisp` file next to it and wrote a "hello world" test. At first I couldn't get it to work using the example on the site, however the example at the top of the `lisp-unit.lisp` file made a lot more sense:
+```Lisp
+(load "lisp-unit")
+(use-package :lisp-unit)
+
+(define-test hello-test
+    (assert-equal 3 4)
+)
+
+(run-tests :all)
+```
+
+At first I tried using a string instead of `hello-test`. I got an error that said it wasn't a symbol. So I changed it to ```hello-test`` and got the same error. Then changed it finally to just `hello-test` and it worked as expected. I mention this becuase `define-test` is not a built in "special form" that the interpreter knows not to evaluate its arguments. So how does it work? Looking at [The source for define-test](https://github.com/OdonataResearchLLC/lisp-unit/blob/89653a232626b67400bf9a941f9b367da38d3815/lisp-unit.lisp#L282) I can see that it is defined as a macro.
+
+Back to the book, I started test driving the examples starting with 4.8. I honestly didn't code out every example, but I do like the TDD approach to working textbook examples.
+
 
