@@ -113,3 +113,20 @@ with0('x', () => console.log(x));
 ```
 
 What I've learned is that we can use the single quote to supress execution of a nested s-expression and instead pass it verbetum. Then we can use `eval` later if we want to execute it.
+
+I had a chance to chat with a teammate of mine, Gene Tinderholm. He said one of the most powerful features of Lisp is that "programs and data are the same thing" and I should look into macros. Alright, lets create some macros:
+```Lisp
+; this calculates 8 and returns it (just like a function)
+(defmacro eight ()
+    (+ 3 5)
+)
+(print (eight))
+
+; this returns the expression `(+ 3 5)` which is then evaluated after being returned
+(defmacro eight2 ()
+    `(+ 3 5)
+)
+(print (eight2))
+```
+I found these examples at https://wiki.c2.com/?LispMacro which has a great explination of macros and how they work.
+
